@@ -1,0 +1,200 @@
+# Check if you are already logged in
+$loggedIn = az account show --query "name" -o tsv
+
+if ($loggedIn -ne $null) {
+    Write-Host "Already logged in as $loggedIn"
+} else {
+    Write-Host "Logging in..."
+    az login
+}
+# Retrieve default subscription id
+$subscriptionId = (
+    (
+        az account list -o json `
+            --query "[?isDefault]"
+    ) | ConvertFrom-Json
+).id
+
+# Set Subscription
+az account set --subscription $subscriptionId
+Write-Host "Subscription set to $subscriptionId"
+
+
+$random = Get-Random -Minimum 100 -Maximum 999
+
+Write-Host "Unifier set to: $random"
+
+
+# Create Resource Group
+$resourceGroup = "OpenAI.Workshop"
+$location = "swedencentral"
+
+az group create `
+    --location $location `
+    --resource-group $resourceGroup
+
+
+# Create OpenAI Cognitive Services
+$csOpenAIName = "WS_AOAI"
+
+az cognitiveservices account create `
+    --name $csOpenAIName `
+    --resource-group $resourceGroup `
+    --location $location `
+    --kind OpenAI `
+    --sku S0 `
+    --yes
+
+$csOpenAIId = ( `
+    az cognitiveservices account show `
+        --name $csOpenAIName `
+        --resource-group $resourceGroup `
+        --query id `
+        --output tsv `
+)
+
+$csOpenAIEndpoint = ( `
+    az cognitiveservices account show `
+        --name $csOpenAIName `
+        --resource-group $resourceGroup `
+        --query properties.endpoint `
+        --output tsv `
+)
+
+$csOpenAIApiKey = (
+    az cognitiveservices account keys list `
+        --name $csOpenAIName `
+        --resource-group $resourceGroup `
+        --query key1 `
+        --output tsv `
+)
+
+# Chat Completion Model
+$modelChatCompletionDeploymentName = "gpt35turbo"
+$modelName = "gpt-35-turbo"
+$modelVersion = "1106"
+$modelFormat = "OpenAI"
+$scaleType = "Standard"
+
+az cognitiveservices account deployment create `
+   --resource-group $resourceGroup `
+   --name $csOpenAIName `
+   --deployment-name $modelChatCompletionDeploymentName `
+   --model-name $modelName `
+   --model-version $modelVersion `
+   --model-format $modelFormat `
+   --sku-name $scaleType `
+   --sku-capacity 1
+
+# Text Embedding Model
+$modelFormat = "OpenAI"
+$modelEmbeddingDeploymentName = "textembeddingada002"
+$modelName = "text-embedding-ada-002"
+$modelVersion = "2"
+$scaleType = "Standard"
+
+
+az cognitiveservices account deployment create `
+   --resource-group $resourceGroup `
+   --name $csOpenAIName `
+   --deployment-name $modelEmbeddingDeploymentName `
+   --model-name $modelName `
+   --model-version $modelVersion `
+   --model-format $modelFormat `
+   --sku-name $scaleType `
+   --sku-capacity 1
+
+# GPT-4 Vision Model
+$modelFormat = "OpenAI"
+$modelVisionDeploymentName = "gpt4vision"
+$modelName = "gpt-4"
+$modelVersion = "vision-preview"
+$scaleType = "Standard"
+
+az cognitiveservices account deployment create `
+   --resource-group $resourceGroup `
+   --name $csOpenAIName `
+   --deployment-name $modelVisionDeploymentName `
+   --model-name $modelName `
+   --model-version $modelVersion `
+   --model-format $modelFormat `
+   --sku-name $scaleType `
+   --sku-capacity 1
+
+
+# Azure AI Search
+$csSearchName = "ws-aisearch-$random"
+$csSearchSku = "standard"
+
+
+az search service create `
+    --name $csSearchName `
+    --resource-group $resourceGroup `
+    --location $location `
+    --sku $csSearchSku
+
+$csSearchEndpoint = "https://$csSearchName.search.windows.net"
+
+$csSearchApiKey = ( `
+    az search admin-key show `
+        --resource-group $resourceGroup `
+        --service-name $csSearchName `
+        --query primaryKey `
+        --output tsv `
+)
+
+
+# Create Storage Account
+$stgName = "wsstorage$random"
+$stgSku = "Standard_LRS"
+
+az storage account create `
+    --name $stgName `
+    --resource-group $resourceGroup `
+    --location $location `
+    --sku $stgSku `
+    --kind StorageV2 `
+    --https-only true `
+    --access-tier Hot
+
+$stgConnectionString = ( `
+    az storage account show-connection-string `
+        --name $stgName `
+        --resource-group $resourceGroup `
+        --query connectionString `
+        --output tsv `
+)
+
+# Store configuration 
+$configurationFile = "./Configuration/application.env"
+New-Item -Name $configurationFile -ItemType File
+
+
+function Set-ConfigurationFileVariable($configurationFile, $variableName, $variableValue) {
+    if (Select-String -Path $configurationFile -Pattern $variableName) {
+        (Get-Content $configurationFile) | Foreach-Object {
+            $_ -replace "$variableName = .*", "$variableName = $variableValue"
+        } | Set-Content $configurationFile
+    } else {
+        Add-Content -Path $configurationFile -value "$variableName = $variableValue"
+    }
+}
+
+Set-ConfigurationFileVariable $configurationFile "WS_AOAI_APIKEY" $csOpenAIApiKey
+Set-ConfigurationFileVariable $configurationFile "WS_AOAI_ENDPOINT" $csOpenAIEndpoint
+Set-ConfigurationFileVariable $configurationFile "WS_CHATCOMPLETION_DEPLOYMENTNAME" $modelChatCompletionDeploymentName
+Set-ConfigurationFileVariable $configurationFile "WS_EMBEDDING_DEPLOYMENTNAME" $modelEmbeddingDeploymentName
+Set-ConfigurationFileVariable $configurationFile "WS_SEARCH_ENDPOINT" $csSearchEndpoint
+Set-ConfigurationFileVariable $configurationFile "WS_SEARCH_APIKEY" $csSearchApiKey
+Set-ConfigurationFileVariable $configurationFile "WS_ASSET_FOLDER" "../../../../assets"
+Set-ConfigurationFileVariable $configurationFile "WS_AOAI1106_APIKEY" $csOpenAIApiKey
+Set-ConfigurationFileVariable $configurationFile "WS_AOAI1106_ENDPOINT" $csOpenAIEndpoint
+Set-ConfigurationFileVariable $configurationFile "WS_AOAI1106_DEPLOYMENTNAME" $modelChatCompletionDeploymentName
+Set-ConfigurationFileVariable $configurationFile "WS_AOAIVISION_APIKEY" $csOpenAIApiKey
+Set-ConfigurationFileVariable $configurationFile "WS_AOAIVISION_ENDPOINT" $csOpenAIEndpoint
+Set-ConfigurationFileVariable $configurationFile "WS_AOAIVISION_DEPLOYMENTNAME" $modelVisionDeploymentName
+Set-ConfigurationFileVariable $configurationFile "WS_STORAGE_CONNECTIONSTRING" $stgConnectionString
+
+Write-Host "Configuration file created at: $configurationFile"
+
+
