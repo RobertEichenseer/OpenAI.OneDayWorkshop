@@ -196,5 +196,3 @@ Set-ConfigurationFileVariable $configurationFile "WS_AOAIVISION_DEPLOYMENTNAME" 
 Set-ConfigurationFileVariable $configurationFile "WS_STORAGE_CONNECTIONSTRING" $stgConnectionString
 
 Write-Host "Configuration file created at: $configurationFile"
-
-
