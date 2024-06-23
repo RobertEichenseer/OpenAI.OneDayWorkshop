@@ -19,11 +19,10 @@ $subscriptionId = (
 az account set --subscription $subscriptionId
 Write-Host "Subscription set to $subscriptionId"
 
-
+# Define Project Unifier
 $random = Get-Random -Minimum 100 -Maximum 999
 
 Write-Host "Unifier set to: $random"
-
 
 # Create Resource Group
 $resourceGroup = "OpenAI.Workshop"
@@ -35,7 +34,7 @@ az group create `
 
 
 # Create OpenAI Cognitive Services
-$csOpenAIName = "WS_AOAI"
+$csOpenAIName = "WS_AOAI_$random"
 
 az cognitiveservices account create `
     --name $csOpenAIName `
@@ -70,9 +69,9 @@ $csOpenAIApiKey = (
 )
 
 # Chat Completion Model
-$modelChatCompletionDeploymentName = "gpt35turbo"
-$modelName = "gpt-35-turbo"
-$modelVersion = "1106"
+$modelChatCompletionDeploymentName = "gpt-4o"
+$modelName = "gpt-4o"
+$modelVersion = "2024-05-13"
 $modelFormat = "OpenAI"
 $scaleType = "Standard"
 
@@ -88,11 +87,10 @@ az cognitiveservices account deployment create `
 
 # Text Embedding Model
 $modelFormat = "OpenAI"
-$modelEmbeddingDeploymentName = "textembeddingada002"
+$modelEmbeddingDeploymentName = "textembedding-ada-002"
 $modelName = "text-embedding-ada-002"
 $modelVersion = "2"
 $scaleType = "Standard"
-
 
 az cognitiveservices account deployment create `
    --resource-group $resourceGroup `
@@ -104,27 +102,55 @@ az cognitiveservices account deployment create `
    --sku-name $scaleType `
    --sku-capacity 1
 
-# GPT-4 Vision Model
+# Dall-E Model
 $modelFormat = "OpenAI"
-$modelVisionDeploymentName = "gpt4vision"
-$modelName = "gpt-4"
-$modelVersion = "vision-preview"
+$modelImageDeploymentName = "dall-e-3"
+$modelName = "dall-e-3"
+$modelVersion = "3.0"
 $scaleType = "Standard"
 
 az cognitiveservices account deployment create `
    --resource-group $resourceGroup `
    --name $csOpenAIName `
-   --deployment-name $modelVisionDeploymentName `
+   --deployment-name $modelDallEDeploymentName `
    --model-name $modelName `
    --model-version $modelVersion `
    --model-format $modelFormat `
    --sku-name $scaleType `
    --sku-capacity 1
 
+# AI Vision
+$csVisionName = "vision$random"
+$csVisionSku = "S1"
+
+az cognitiveservices account create `
+    --name $csVisionName `
+    --resource-group $resourceGroup `
+    --location $location `
+    --kind ComputerVision `
+    --sku $csVisionSku `
+    --yes
+
+$csVisionEndpoint = ( `
+    az cognitiveservices account show `
+        --name $csVisionName `
+        --resource-group $resourceGroup `
+        --query properties.endpoint `
+        --output tsv `
+)
+
+$csVisionApiKey = ( `
+    az cognitiveservices account keys list `
+        --name $csVisionName `
+        --resource-group $resourceGroup `
+        --query key1 `
+        --output tsv `
+)
+
 
 # Azure AI Search
 $csSearchName = "ws-aisearch-$random"
-$csSearchSku = "standard"
+$csSearchSku = "Free"
 
 
 az search service create `
@@ -167,7 +193,7 @@ $stgConnectionString = ( `
 
 # Store configuration 
 $configurationFile = "./Configuration/application.env"
-New-Item -Name $configurationFile -ItemType File
+New-Item -Name $configurationFile -ItemType File -Force
 
 
 function Set-ConfigurationFileVariable($configurationFile, $variableName, $variableValue) {
@@ -184,15 +210,14 @@ Set-ConfigurationFileVariable $configurationFile "WS_AOAI_APIKEY" $csOpenAIApiKe
 Set-ConfigurationFileVariable $configurationFile "WS_AOAI_ENDPOINT" $csOpenAIEndpoint
 Set-ConfigurationFileVariable $configurationFile "WS_CHATCOMPLETION_DEPLOYMENTNAME" $modelChatCompletionDeploymentName
 Set-ConfigurationFileVariable $configurationFile "WS_EMBEDDING_DEPLOYMENTNAME" $modelEmbeddingDeploymentName
+Set-ConfigurationFileVariable $configurationFile "WS_IMAGE_DEPLOYMENTNAME" $modelImageDeploymentName
+Set-ConfigurationFileVariable $configurationFile "WS_VISION_APIKEY" $csVisionApiKey
+Set-ConfigurationFileVariable $configurationFile "WS_VISION_ENDPOINT" $csVisionEndpoint
+Set-ConfigurationFileVariable $configurationFile "WS_STORAGE_CONNECTIONSTRING" $stgConnectionString
 Set-ConfigurationFileVariable $configurationFile "WS_SEARCH_ENDPOINT" $csSearchEndpoint
 Set-ConfigurationFileVariable $configurationFile "WS_SEARCH_APIKEY" $csSearchApiKey
-Set-ConfigurationFileVariable $configurationFile "WS_ASSET_FOLDER" "../../../../assets"
-Set-ConfigurationFileVariable $configurationFile "WS_AOAI1106_APIKEY" $csOpenAIApiKey
-Set-ConfigurationFileVariable $configurationFile "WS_AOAI1106_ENDPOINT" $csOpenAIEndpoint
-Set-ConfigurationFileVariable $configurationFile "WS_AOAI1106_DEPLOYMENTNAME" $modelChatCompletionDeploymentName
-Set-ConfigurationFileVariable $configurationFile "WS_AOAIVISION_APIKEY" $csOpenAIApiKey
-Set-ConfigurationFileVariable $configurationFile "WS_AOAIVISION_ENDPOINT" $csOpenAIEndpoint
-Set-ConfigurationFileVariable $configurationFile "WS_AOAIVISION_DEPLOYMENTNAME" $modelVisionDeploymentName
+Set-ConfigurationFileVariable $configurationFile "WS_ASSET_FOLDER" "../../assets"
 Set-ConfigurationFileVariable $configurationFile "WS_STORAGE_CONNECTIONSTRING" $stgConnectionString
+
 
 Write-Host "Configuration file created at: $configurationFile"
