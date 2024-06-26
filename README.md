@@ -41,3 +41,8 @@ Azure OpenAI Workshop companion material.
 |14:30 - 15:00 | GPT4 Vision | Analyze Image |
 |15:00 - 16:00 | Assistants API|Create Simple Run |
 |16:00 - 17:00 | Semantic Kernel |PlugIns; Memory |
+
+
+## Re-factoring
+
+![WorkshopModulesOverview](./Media/img/WorkshopModulesOverview.png)
