@@ -104,7 +104,7 @@ az cognitiveservices account deployment create `
 
 # Dall-E Model
 $modelFormat = "OpenAI"
-$modelImageDeploymentName = "dall-e-3"
+$modelDallEDeploymentName = "dall-e-3"
 $modelName = "dall-e-3"
 $modelVersion = "3.0"
 $scaleType = "Standard"
@@ -216,7 +216,7 @@ Set-ConfigurationFileVariable $configurationFile "WS_VISION_ENDPOINT" $csVisionE
 Set-ConfigurationFileVariable $configurationFile "WS_STORAGE_CONNECTIONSTRING" $stgConnectionString
 Set-ConfigurationFileVariable $configurationFile "WS_SEARCH_ENDPOINT" $csSearchEndpoint
 Set-ConfigurationFileVariable $configurationFile "WS_SEARCH_APIKEY" $csSearchApiKey
-Set-ConfigurationFileVariable $configurationFile "WS_ASSET_FOLDER" "../../assets"
+Set-ConfigurationFileVariable $configurationFile "WS_ASSETS_FOLDER" "../../assets"
 Set-ConfigurationFileVariable $configurationFile "WS_STORAGE_CONNECTIONSTRING" $stgConnectionString
 
 
