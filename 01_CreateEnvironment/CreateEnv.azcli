@@ -33,7 +33,7 @@ az group create `
     --resource-group $resourceGroup
 
 
-# Create OpenAI Cognitive Services
+# Create Azure OpenAI Account
 $csOpenAIName = "WS_AOAI_$random"
 
 az cognitiveservices account create `
@@ -104,7 +104,7 @@ az cognitiveservices account deployment create `
 
 # Dall-E Model
 $modelFormat = "OpenAI"
-$modelDallEDeploymentName = "dall-e-3"
+$modelImageDeploymentName = "dall-e-3"
 $modelName = "dall-e-3"
 $modelVersion = "3.0"
 $scaleType = "Standard"
@@ -112,7 +112,7 @@ $scaleType = "Standard"
 az cognitiveservices account deployment create `
    --resource-group $resourceGroup `
    --name $csOpenAIName `
-   --deployment-name $modelDallEDeploymentName `
+   --deployment-name $modelImageDeploymentName `
    --model-name $modelName `
    --model-version $modelVersion `
    --model-format $modelFormat `
@@ -120,7 +120,7 @@ az cognitiveservices account deployment create `
    --sku-capacity 1
 
 # AI Vision
-$csVisionName = "vision$random"
+$csVisionName = "wsvision$random"
 $csVisionSku = "S1"
 
 az cognitiveservices account create `
@@ -151,7 +151,6 @@ $csVisionApiKey = ( `
 # Azure AI Search
 $csSearchName = "ws-aisearch-$random"
 $csSearchSku = "Free"
-
 
 az search service create `
     --name $csSearchName `
