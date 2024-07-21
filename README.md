@@ -1,8 +1,12 @@
 # OpenAI.Workshop
 
-Azure OpenAI Workshop companion material.
+Azure OpenAI Workshop companion material. The workshop is currently designed to be delivered by an trainer, providing interactive and engaging sessions. 
+
+Stay tuned, as we are excited to announce that it will soon transition into a self-paced training format, guided by an ***avatar*** for a more flexible learning experience.
 
 ## Pre-Requisites
+
+Be sure to have the following pre-requisites installed:
 
 ### Development Environment
 
@@ -12,7 +16,6 @@ Azure OpenAI Workshop companion material.
 - [Git](https://git-scm.com)
 - [Powershell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
-
 ### VSCode Extensions
 
 - [c#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
@@ -20,8 +23,7 @@ Azure OpenAI Workshop companion material.
 - [Azure CLI](https://marketplace.visualstudio.com/items?itemName=ms-vscode.azurecli)
 - [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 
-
-### Azure Subscription with Azure OpenAI enabled:
+### Azure Subscription with Azure OpenAI enabled
 
 [Azure Subscription](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUNTZBNzRKNlVQSFhZMU9aV09EVzYxWFdORCQlQCN0PWcu)
 
@@ -32,7 +34,7 @@ Azure OpenAI Workshop companion material.
 
 | Time | Topic | Content |
 |------|-------|---------|
-|09:00 - 10:30 | **Welcome** | Get to know each other - Personal Goals & OpenAI Intro |
+|09:00 - 10:30 | **Welcome** | An [introduction](./00_IntroWorkshop/OpenAI-Workshop.pdf) of Azure Open AI for .net developer. |
 |10:30 - 11:00 | **Intro** Create Environment | [Portal](https://portal.azure.com) or [CLI](./01_CreateEnvironment/01_Environment.ipynb)  |
 |11:00 - 11:30 | **RAG** Completion | [Chat Completion HTTP](./02_RAG/02_01_ChatCompletion/01_ChatCompletionText_REST.ipynb) or [Chat Completion SDK](./02_RAG/02_01_ChatCompletion/) |
 |11:30 - 12:30 | **RAG** Embeddings | [Text Embeddings](./02_RAG/02_02_Embedding/01_TextEmbeddings.ipynb) or [Image Embeddings](./02_RAG/02_02_Embedding/02_ImageEmbeddings.ipynb) and [Cosine Similarity](./02_RAG/02_02_Embedding/03_CosineSimilarity.ipynb) |
@@ -42,5 +44,5 @@ Azure OpenAI Workshop companion material.
 |14:30 - 15:00 |Break | |
 |15:00 - 16:00 | **Agent Processing** Assistants API | [Simple Run](./04_Agent/01_Assistants/01_CreateRun.ipynb) |
 |16:00 - 16:30 | **Tooling** Smeantic Kernel | [Plugins](./05_Tooling/01_SemanticKernel/01_Plugin.ipynb) or [Semantic Memory](./05_Tooling/01_SemanticKernel/02_SemanticMemory.ipynb) |
-|16:30 - 17:00 | Wrap Upk | Questions / Knowledge Check |
+|16:30 - 17:00 | Wrap Up | Questions / Knowledge Check |
 
