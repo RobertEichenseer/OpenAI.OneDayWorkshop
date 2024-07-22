@@ -4,6 +4,8 @@ Azure OpenAI Workshop companion material. The workshop is currently designed to 
 
 Stay tuned, as we are excited to announce that it will soon transition into a self-paced training format, guided by an ***avatar*** for a more flexible learning experience.
 
+This repository uses the [.NET SDK version Beta 2](https://www.nuget.org/packages/Azure.AI.OpenAI/2.0.0-beta.2). If you're looking for Beta 1 samples, you can find them [here](https://github.com/RobertEichenseer/OpenAI.OneDayWorkshop/tree/NET-SDK-Beta-1).
+
 ## Pre-Requisites
 
 Be sure to have the following pre-requisites installed:
@@ -26,7 +28,6 @@ Be sure to have the following pre-requisites installed:
 ### Azure Subscription with Azure OpenAI enabled
 
 [Azure Subscription](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUNTZBNzRKNlVQSFhZMU9aV09EVzYxWFdORCQlQCN0PWcu)
-
 
 ## Agenda
 
