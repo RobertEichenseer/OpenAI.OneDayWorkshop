@@ -1,0 +1,24 @@
+{
+    "name": "OpenAI OneDay Workshop",
+    "image": "mcr.microsoft.com/vscode/devcontainers/dotnet:8.0",
+    "features": {
+      "powershell": "latest",
+      "azure-cli": "latest"
+    },
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-dotnettools.csharp",
+          "ms-dotnettools.vscode-dotnet-runtime",
+          "ms-toolsai.jupyter",
+          "ms-dotnettools.dotnet-interactive-vscode"
+        ]
+      },
+      "settings": {
+        "terminal.integrated.shell.linux": "/usr/bin/pwsh"
+      }
+    },
+    "postCreateCommand": "sudo chmod +x /usr/bin/pwsh",
+    "forwardPorts": [8888],
+    "remoteUser": "vscode"
+  }
