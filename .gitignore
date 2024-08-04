@@ -400,8 +400,4 @@ FodyWeavers.xsd
 # Environment Variables
 *.env
 
-# Powerpoint & Video Files
-*.pptx
-*.webm
-*.mp4
 
