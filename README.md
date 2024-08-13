@@ -43,9 +43,9 @@ If you prefer local execution bBe sure to have the following pre-requisites inst
 - [Azure CLI](https://marketplace.visualstudio.com/items?itemName=ms-vscode.azurecli)
 - [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 
-### Azure Subscription with Azure OpenAI enabled
+### Azure OpenAI is a Limited Access service, and access and use is subject to eligibility criteria determined by Microsoft.
 
-[Azure Subscription](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUNTZBNzRKNlVQSFhZMU9aV09EVzYxWFdORCQlQCN0PWcu)
+[Product Terms & Code of conduct](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/limited-access)
 
 ## Agenda
 
